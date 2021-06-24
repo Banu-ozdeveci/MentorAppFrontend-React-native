@@ -17,11 +17,11 @@ const mapStateToProps = (state) => ({
 
 export const MentorProfile = connect(mapStateToProps, { getCurrentMentor })(
   ({ route, navigation, getCurrentMentor, currentMentor }) => {
-    const { id, name, major, uni, ranking, year } = route.params.data;
+    const { _id, name, major, uni, ranking, year } = route.params.data;
 
     const handleGetCurrentProduct = async () => {
       try {
-        await getCurrentMentor(id);
+        await getCurrentMentor(_id);
       } catch (error) {
         console.log("handleGetCurrentMentor", error);
       }

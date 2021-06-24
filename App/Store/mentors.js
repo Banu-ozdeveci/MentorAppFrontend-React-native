@@ -1,13 +1,16 @@
-import * as firebase from "firebase";
-import "firebase/firestore";
+// import * as firebase from "firebase";
+// import "firebase/firestore";
 
 import {
   getData,
-  getUniMajorData,
+  getMajorDataMentor,
   getOnlineMentorsData,
   getWeekFavData,
   getRecommendedData,
   getRanking,
+  getCurrentMentorData,
+  getUniMajorData,
+  getUniDataMentor,
 } from "../API/index";
 
 const SET_APP_MENTORS = "SET_APP_MENTORS";
@@ -80,7 +83,7 @@ export function mentorsReducer(state = initialState, { type, payload }) {
     case SET_RANKING:
       return {
         ...state,
-        currentMentor: payload,
+        ranking: payload,
       };
     default:
       return state;
@@ -131,18 +134,35 @@ export const getAllData = () => async (dispatch) => {
   }
 };
 
-export const getUniMajor = (domain, data) => async (dispatch) => {
+export const getUniMajor = (domain, nav) => async (dispatch) => {
   try {
-    const UniMajorData = await getUniMajorData(domain, data);
+    const UniMajorData = await getUniMajorData(domain, nav);
     dispatch(setAppUniMajor(UniMajorData));
   } catch (error) {
     console.log("getUniMajorError", error);
+  }
+};
+export const getUniData = (data) => async (dispatch) => {
+  try {
+    const UniMajorData = await getUniDataMentor(data);
+    dispatch(setAppUniMajor(UniMajorData));
+  } catch (error) {
+    console.log("getUniMajorError", error);
+  }
+};
+export const getMajorData = (data) => async (dispatch) => {
+  try {
+    const MajorData = await getMajorDataMentor(data);
+    dispatch(setAppUniMajor(MajorData));
+  } catch (error) {
+    console.log("getMajorError", error);
   }
 };
 
 export const getOnlineMentors = () => async (dispatch) => {
   try {
     const OnlineMentorsData = await getOnlineMentorsData();
+
     dispatch(setOnlineMentors(OnlineMentorsData));
   } catch (error) {
     console.log("getOnlineMentors", error);
@@ -158,9 +178,10 @@ export const getFavMentors = () => async (dispatch) => {
   }
 };
 
-export const getRecommendedMentors = (uni, major) => async (dispatch) => {
+export const getRecommendedMentors = (id) => async (dispatch) => {
   try {
-    const MentorsData = await getRecommendedData(uni, major);
+    const MentorsData = await getRecommendedData(id);
+    console.log("men", MentorsData);
     dispatch(setRecommendedMentors(MentorsData));
   } catch (error) {
     console.log("getRecommendedMentors", error);
@@ -169,13 +190,8 @@ export const getRecommendedMentors = (uni, major) => async (dispatch) => {
 
 export const getCurrentMentor = (mentorID) => async (dispatch) => {
   try {
-    firebase
-      .firestore()
-      .collection("mentors")
-      .doc(mentorID)
-      .onSnapshot(function (doc) {
-        dispatch(setCurrentMentor(doc.data()));
-      });
+    const MentorsData = await getCurrentMentorData(mentorID);
+    dispatch(setCurrentMentor(MentorsData));
   } catch (e) {
     console.log("getCurrentMentor error", e);
   }

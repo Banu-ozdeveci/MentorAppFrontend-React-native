@@ -34,7 +34,7 @@ const MentorReviews = connect(
           onPress={() => navigation.navigate("Home")}
         />
         <View style={styles.column}>
-          {reviews[0] != false && reviews ? (
+          {reviews.length !== 0 ? (
             <AppText style={styles.feedback}>
               Feedback ({reviews.length})
             </AppText>
@@ -42,7 +42,7 @@ const MentorReviews = connect(
             <AppText style={styles.zero}> Feedback 0</AppText>
           )}
 
-          {reviews[0] != false && reviews ? (
+          {reviews.length !== 0 ? (
             reviews.map((item) => (
               <ReviewBox
                 name={item.name}

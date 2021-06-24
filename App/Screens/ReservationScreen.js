@@ -9,34 +9,29 @@ import ReservationDate from "../Components/ReservationDate";
 import ReservationLine from "../Components/ReservationLine";
 import MyReservationBox from "../Components/MyReservationBox";
 import AppButton from "../Components/AppButton";
-import { getCurrentUserData, selectUserData } from "../Store/user";
+
+import { selectAuthMail } from "../Store/auth";
 import { connect } from "react-redux";
 import ListItem from "../Components/ListItem";
 import Line from "../Components/Line";
+import { selectAuthUser } from "../Store/auth";
 
 const mapStateToProps = (state) => ({
-  user: selectUserData(state),
+  mail: selectAuthMail(state),
+  user: selectAuthUser(state),
 });
 
-export const ReservationScreen = connect(mapStateToProps, {
-  getCurrentUserData,
-})(({ getCurrentUserData, navigation, user }) => {
-  const handleGetCurrentUserData = async () => {
-    try {
-      await getCurrentUserData();
-    } catch (error) {
-      console.log("getCurrentUser", error);
-    }
-  };
+export const ReservationScreen = connect(
+  mapStateToProps,
+  {}
+)(({ navigation, user, mail }) => {
   const res = user.reservations;
+  console.log("useee", res);
 
-  useEffect(() => {
-    handleGetCurrentUserData();
-  }, []);
   return (
     <Screen>
       <TopRectangle
-        children="My Reservations"
+        children="Rezervasyonlarım"
         style1={styles.style1}
         back={false}
       />

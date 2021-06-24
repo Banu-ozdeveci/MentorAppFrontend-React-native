@@ -5,30 +5,30 @@ import TopRectangle from "../Components/TopRectangle";
 import AppText from "../Components/AppText";
 import colors from "../style/colors";
 import PaymentList from "../Components/PaymentList";
-import { selectUserData } from "../Store/user";
+
 import { connect } from "react-redux";
+import { selectAuthUser } from "../Store/auth";
 
 const mapStateToProps = (state) => ({
-  user: selectUserData(state),
+  user: selectAuthUser(state),
 });
 
 export const PaymentDetails = connect(
   mapStateToProps,
   {}
 )(({ navigation, user }) => {
-  console.log("payment", user);
   return (
     <Screen>
       <TopRectangle
-        children="Payment History"
+        children="Ödeme Geçmişi"
         style1={styles.style1}
         onPress={() => navigation.navigate("SettingsScreen")}
       ></TopRectangle>
       <AppText style={styles.subtitle}>
-        ({user.reservations.length}) Payment
+        ({user.reservations.length}) Ödeme
       </AppText>
       <View style={styles.container}>
-        {user.reservations.map((item, index) => (
+        {user.reservations.map((item) => (
           <PaymentList
             date={item.date}
             time={item.time}

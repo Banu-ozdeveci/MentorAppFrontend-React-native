@@ -38,7 +38,7 @@ const MentorAvailabilty = connect(
         <View style={styles.column}>
           <Calendar width={180} height={50} />
           <AppText style={styles.this}>This Week</AppText>
-          {availability ? (
+          {availability.length !== 0 ? (
             availability.map((item, index) => (
               <BookingBox
                 date={item.date}

@@ -8,102 +8,98 @@ import AppText from "../Components/AppText";
 
 import { connect } from "react-redux";
 import AppButton from "../Components/AppButton";
-import {
-  getRecommendedMentors,
-  selectRecommendedMentorsData,
-} from "../Store/mentors";
+
+import { saveRecommendedData } from "../API";
+import { selectAuthUser } from "../Store/auth";
 
 const uniData = [
-  { label: "Boğaziçi University", value: 1, data: "Boğaziçi" },
-  { label: "Middle East Technical University", value: 2, data: "Odtü" },
-  { label: "Istanbul Technical University", value: 3, data: "İtü" },
-  { label: "Galatasaray University", value: 4, data: "Galatasaray" },
-  { label: "Sabancı University", value: 5, data: "Sabancı" },
+  { label: "Boğaziçi Üniversitesi", value: 1, data: "Boğaziçi" },
+  { label: "Orta Doğu Teknik Üniversitesi", value: 2, data: "Odtü" },
+  { label: "İstanbul Teknik Üniversitesi", value: 3, data: "İtü" },
+  { label: "Galatasaray Üniversitesi", value: 4, data: "Galatasaray" },
+  { label: "Hacettepe Üniversitesi", value: 5, data: "Hacettepe" },
 ];
 
 const majorData = [
-  { label: "Computer Science", value: 1, data: "CS" },
-  { label: "Economy", value: 2, data: "Economy" },
-  { label: "Medical", value: 3, data: "Medical" },
-  { label: "Math", value: 4, data: "Math" },
-  { label: "Law", value: 5, data: "Law" },
+  { label: "Bilgisayar Mühendisliği", value: 1, data: "Bilgisayar M." },
+  { label: "Ekonomi", value: 2, data: "Ekonomi" },
+  { label: "Tıp", value: 3, data: "Tıp" },
+  { label: "Matematik", value: 4, data: "Matematik" },
+  { label: "Hukuk", value: 5, data: "Hukuk" },
+  { label: "Psikoloji", value: 5, data: "Psikoloji" },
 ];
 
 const mapStateToProps = (state) => ({
-  recommended: selectRecommendedMentorsData(state),
+  user: selectAuthUser(state),
 });
 
-const SurveyScreen = connect(mapStateToProps, {
-  getRecommendedMentors,
-})(
-  ({
-    navigation,
-    getRecommendedMentors,
-    selectRecommendedMentorsData,
-    recommended,
-  }) => {
-    const [uni, setUni] = useState();
-    const [major, setMajor] = useState();
+const SurveyScreen = connect(
+  mapStateToProps,
+  {}
+)(({ user, navigation }) => {
+  const [uni, setUni] = useState();
+  const [major, setMajor] = useState();
 
-    const handleRecommendations = async () => {
-      try {
-        let data1 = uni ? Object.values(uni)[2] : null;
-        let data2 = major ? Object.values(major)[2] : null;
-        await getRecommendedMentors(data1, data2);
-      } catch (error) {
-        console.log("getRecommended", error);
-      }
-      navigation.navigate("Home");
-    };
-    LogBox.ignoreLogs(["Each"]);
-    return (
-      <Screen>
-        <View style={styles.container}>
-          <TopRectangle
-            onPress={() => navigation.navigate("Home")}
-            height={77}
-            children="Hi User!"
-            children2="Let Us Know Your Goals"
-            style1={styles.title}
-            style2={styles.title2}
-          />
+  const handleRecommendations = async () => {
+    try {
+      let data1 = uni ? Object.values(uni)[2] : null;
+      let data2 = major ? Object.values(major)[2] : null;
+      console.log("d", data1, data2);
 
-          <Image
-            style={styles.image}
-            source={require("../../assets/survey.jpg")}
-          />
-          <View style={styles.box}>
-            <AppText style={styles.text}>
-              Answer these questions and we will make personal recommendations.
-            </AppText>
-          </View>
+      await saveRecommendedData(user._id, data1, data2);
+    } catch (error) {
+      console.log("getRecommended", error);
+    }
+    navigation.navigate("Home");
+  };
+  LogBox.ignoreLogs(["Each"]);
+  return (
+    <Screen>
+      <View style={styles.container}>
+        <TopRectangle
+          onPress={() => navigation.navigate("Home")}
+          height={77}
+          children="Merhaba !"
+          children2="Hedefin Hangisi?"
+          style1={styles.title}
+          style2={styles.title2}
+        />
 
-          <View style={{ right: 30 }}>
-            <SurveyPicker
-              title="Select University"
-              data={uniData}
-              selectedItem={uni}
-              onSelectItem={(item) => setUni(item)}
-            />
-            <SurveyPicker
-              title="Select Major"
-              data={majorData}
-              selectedItem={major}
-              onSelectItem={(item) => setMajor(item)}
-            />
-            <AppButton
-              title="Done"
-              onPress={() => handleRecommendations()}
-              width={140}
-              titleColor={colors.DARKGREEN}
-              style={{ alignSelf: "center", left: 32, top: 25 }}
-            />
-          </View>
+        <Image
+          style={styles.image}
+          source={require("../../assets/survey.jpg")}
+        />
+        <View style={styles.box}>
+          <AppText style={styles.text}>
+            Bu soruları cevapla ve sana özel mentör önerileri yapalım.
+          </AppText>
         </View>
-      </Screen>
-    );
-  }
-);
+
+        <View style={{ right: 30 }}>
+          <SurveyPicker
+            title="Üniversite Seç"
+            data={uniData}
+            selectedItem={uni}
+            onSelectItem={(item) => setUni(item)}
+          />
+          <SurveyPicker
+            title="Bölüm Seç"
+            data={majorData}
+            selectedItem={major}
+            onSelectItem={(item) => setMajor(item)}
+          />
+          <AppButton
+            title="Onayla"
+            onPress={() => handleRecommendations()}
+            width={140}
+            titleColor={colors.DARKGREEN}
+            style={{ alignSelf: "center", left: 32, top: 25 }}
+          />
+        </View>
+      </View>
+    </Screen>
+  );
+});
 
 const styles = StyleSheet.create({
   container: { alignItems: "center", flex: 1 },

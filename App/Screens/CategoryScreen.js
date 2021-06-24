@@ -19,18 +19,18 @@ import AppText from "../Components/AppText";
 import colors from "../style/colors";
 import Icon from "../Components/Icon";
 import {
-  getUniMajor,
+  getUniData,
   selectUniMajorData,
   selectRankingData,
   getRankingData,
   getAllData,
   selectAllMentorData,
+  getMajorData,
 } from "../Store/mentors";
 import { connect } from "react-redux";
-import { getRanking } from "../API";
+
 import AppButton from "../Components/AppButton";
 import AppTextInput from "../Components/AppTextInput";
-import useColorScheme from "react-native/Libraries/Utilities/useColorScheme";
 
 const mapStateToProps = (state) => ({
   uniMajor: selectUniMajorData(state),
@@ -39,14 +39,17 @@ const mapStateToProps = (state) => ({
 });
 
 const CategoryScreen = connect(mapStateToProps, {
-  getUniMajor,
+  getUniData,
   getRankingData,
   getAllData,
+  getMajorData,
 })(
   ({
     navigation,
+    getUniData,
+    getMajorData,
     uniMajor,
-    getUniMajor,
+
     getRankingData,
     ranking,
     getAllData,
@@ -59,9 +62,9 @@ const CategoryScreen = connect(mapStateToProps, {
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
 
-    const handleCategory = async (domain, data) => {
+    const handleUniCategory = async (data) => {
       try {
-        await getUniMajor(domain, data);
+        await getUniData(data);
       } catch (error) {
         console.log("getAllData", error);
       }
@@ -69,19 +72,26 @@ const CategoryScreen = connect(mapStateToProps, {
         title: data,
       });
     };
+    const handleMajorCategory = async (data) => {
+      try {
+        await getMajorData(data);
+      } catch (error) {
+        console.log("getMajorData", error);
+      }
+      navigation.navigate("SelectedUniMajor", {
+        title: data,
+      });
+    };
 
     const handleRanking = async (min, max) => {
-      let result = [];
       try {
-        await getAllData();
-        result = allData.filter(
-          (item) => item.ranking > min && item.ranking < max
-        );
-        console.log("ass", result);
+        await getRankingData(min, max);
+
+        //console.log("ass", ranking);
       } catch (error) {
-        console.log("getAllData", error);
+        console.log("handleRanking", error);
       }
-      navigation.navigate("SelectedRanking", { rank: result, min, max });
+      navigation.navigate("SelectedRanking", { min, max });
     };
 
     useEffect(() => {
@@ -127,16 +137,16 @@ const CategoryScreen = connect(mapStateToProps, {
       );
     };
 
-    const handleCategories = async (item) => {
-      try {
-        await getUniMajor(item.domain, item.nav);
-      } catch (error) {
-        console.log("getAllData", error);
-      }
-      navigation.navigate("SelectedUniMajor", {
-        title: item.title,
-      });
-    };
+    // const handleCategories = async (item) => {
+    //   try {
+    //     await getUniMajor(item.domain, item.nav);
+    //   } catch (error) {
+    //     console.log("getAllData", error);
+    //   }
+    //   navigation.navigate("SelectedUniMajor", {
+    //     title: item.title,
+    //   });
+    // };
 
     return (
       <Screen>
@@ -172,7 +182,7 @@ const CategoryScreen = connect(mapStateToProps, {
                 data={uniData}
                 renderItem={({ item }) => (
                   <UniCard
-                    onPress={() => handleCategory("uni", item.title)}
+                    onPress={() => handleUniCategory(item.title)}
                     title={item.title}
                     subtitle={item.subtitle}
                     source={item.source}
@@ -210,7 +220,7 @@ const CategoryScreen = connect(mapStateToProps, {
                 data={majorData}
                 renderItem={({ item }) => (
                   <MajorCard
-                    onPress={() => handleCategory("major", item.title)}
+                    onPress={() => handleMajorCategory(item.title)}
                     icon={item.icon}
                     title={item.title}
                   />
@@ -299,7 +309,7 @@ const uniData = [
     source: require("../../assets/uni1.jpg"),
   },
   {
-    title: "Galatasaray ",
+    title: "Galatasaray",
     subtitle: "12 mentor",
     source: require("../../assets/uni2.jpg"),
   },
@@ -318,18 +328,18 @@ const uniData = [
 const majorData = [
   {
     icon: "code",
-    title: "CS",
+    title: "Bilgisayar M.",
   },
   {
     icon: "user-md",
-    title: "Medical",
+    title: "Tıp",
   },
   {
     icon: "dollar",
-    title: "Economy",
+    title: "Ekonomi",
   },
-  { icon: "gavel", title: "Law" },
-  { icon: "calculator", title: "Math" },
+  { icon: "gavel", title: "Hukuk" },
+  { icon: "calculator", title: "Matematik" },
 ];
 
 const data = [
@@ -347,26 +357,26 @@ const data = [
   },
   {
     id: 3,
-    title: "Istanbul Technical University",
+    title: "İstanbul Teknik Üniversitesi",
     domain: "uni",
     nav: "İtü",
   },
   {
     id: 4,
-    title: "Middle east technical university",
+    title: "Orta Doğu Teknik Üniversitesi",
     domain: "uni",
     nav: "Odtü",
   },
   {
     id: 5,
-    title: "Computer Science",
+    title: "Bilgisayar Mühendisliği",
     domain: "major",
-    nav: "CS",
+    nav: "Bilgisayar M.",
   },
   {
     id: 6,
-    title: "Economy",
+    title: "Ekonomi",
     domain: "major",
-    nav: "Economy",
+    nav: "Ekonomi",
   },
 ];

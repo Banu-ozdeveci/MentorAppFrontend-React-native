@@ -12,7 +12,7 @@ function MentorCard({
   onPress,
   name,
   uni,
-  url,
+  url = "https://firebasestorage.googleapis.com/v0/b/banuapp-15de5.appspot.com/o/a3.jpg?alt=media&token=b8fcac9f-2139-4df0-a4c7-b00ff5d6ddb6",
   major,
   calls,
   price,

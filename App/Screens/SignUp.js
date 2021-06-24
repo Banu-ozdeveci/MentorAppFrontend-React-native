@@ -15,6 +15,7 @@ import AppTextInput from "../Components/AppTextInput";
 import AppButton from "../Components/AppButton";
 import AppText from "../Components/AppText";
 import * as Yup from "yup";
+import { getCurrentUserData, selectUserData } from "../Store/user";
 
 import { connect } from "react-redux";
 import { signupUser, selectAuthStatus } from "../Store/auth";
@@ -24,7 +25,11 @@ const validationSchema = Yup.object().shape({
 
   username: Yup.string().required().label("Name"),
   password: Yup.string().required().min(4).label("Password"),
-  confirm: Yup.string().required().min(4).label("Confirm Password"),
+  confirm: Yup.string()
+    .required()
+    .min(4)
+    .label("Confirm Password")
+    .oneOf([Yup.ref("password"), null], "Does not match with Password!"),
 });
 
 const mapStateToProps = (state) => ({
@@ -35,6 +40,13 @@ const SignUp = connect(mapStateToProps, {
   signupUser,
 })(({ signupUser, navigation }) => {
   const [enableshift, setenableShift] = useState(false);
+  const handleGetCurrentUserData = async (mail) => {
+    try {
+      await getCurrentUserData(mail);
+    } catch (error) {
+      console.log("getCurrentUser", error);
+    }
+  };
   return (
     <Screen>
       <TouchableWithoutFeedback onPress={() => navigation.navigate("Login")}>
@@ -63,7 +75,10 @@ const SignUp = connect(mapStateToProps, {
               username: "",
               confirm: "",
             }}
-            onSubmit={(values) => signupUser(values)}
+            onSubmit={(values) => {
+              signupUser(values);
+              handleGetCurrentUserData(values.email);
+            }}
             validationSchema={validationSchema}
           >
             {({
@@ -79,6 +94,7 @@ const SignUp = connect(mapStateToProps, {
                   onChangeText={handleChange("username")}
                   onBlur={() => setFieldTouched("username")}
                   onFocus={() => setenableShift(false)}
+                  height={57}
                 />
                 {touched.username && (
                   <AppText
@@ -97,6 +113,7 @@ const SignUp = connect(mapStateToProps, {
                   onChangeText={handleChange("email")}
                   onBlur={() => setFieldTouched("email")}
                   onFocus={() => setenableShift(false)}
+                  height={57}
                 />
                 {touched.email && (
                   <AppText
@@ -115,6 +132,7 @@ const SignUp = connect(mapStateToProps, {
                   onBlur={() => setFieldTouched("password")}
                   onFocus={() => setenableShift(true)}
                   secureTextEntry
+                  height={57}
                 />
                 {touched.password && (
                   <AppText
@@ -133,6 +151,7 @@ const SignUp = connect(mapStateToProps, {
                   onBlur={() => setFieldTouched("confirm")}
                   onFocus={() => setenableShift(true)}
                   secureTextEntry
+                  height={57}
                 />
                 {touched.confirm && (
                   <AppText

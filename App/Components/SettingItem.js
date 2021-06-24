@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   column: { alignItems: "center", flex: 1 },
   title: {
-    fontSize: 19,
+    fontSize: 18,
     letterSpacing: 1,
   },
   line: {

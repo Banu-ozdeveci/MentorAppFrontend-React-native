@@ -6,13 +6,15 @@ import { AntDesign } from "@expo/vector-icons";
 function HomeSubtitle({ title, style1, style2, onPress }) {
   return (
     <View style={styles.container}>
-      <AppText style={[styles.title, styles.style1]}>{title}</AppText>
+      <AppText style={[styles.title, style1]}>{title}</AppText>
       <TouchableOpacity
         onPress={onPress}
         style={{ left: 30, flexDirection: "row" }}
       >
-        <AppText style={[styles.see, styles.style2]}>See all</AppText>
-        <AntDesign name="caretright" color="#48B13E" size={16} />
+        <View style={[styles.container, style2]}>
+          <AppText style={styles.see}>Daha fazla</AppText>
+          <AntDesign name="caretright" color="#48B13E" size={16} />
+        </View>
       </TouchableOpacity>
     </View>
   );

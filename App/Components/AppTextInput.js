@@ -3,9 +3,30 @@ import { View, StyleSheet, TextInput } from "react-native";
 import colors from "../style/colors";
 import { FontAwesome } from "@expo/vector-icons";
 
-function AppTextInput({ icon, width, height, borderRadius, ...otherProps }) {
+function AppTextInput({
+  icon,
+  width,
+  height,
+  borderRadius,
+  borderColor,
+  borderWidth,
+  marginVertical,
+  ...otherProps
+}) {
   return (
-    <View style={[styles.container, { width, height, borderRadius }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          width,
+          height,
+          borderRadius,
+          marginVertical,
+          borderColor,
+          borderWidth,
+        },
+      ]}
+    >
       <TextInput
         maxLength={45}
         placeholderTextColor={colors.SOFTBLACK}

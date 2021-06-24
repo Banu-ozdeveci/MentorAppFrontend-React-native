@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.BACKGROUND,
     padding: 20,
     elevation: 10,
+    marginTop: 15,
   },
   anonim: {
     width: 55,

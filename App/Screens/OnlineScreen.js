@@ -50,8 +50,8 @@ const OnlineScreen = connect(mapStateToProps, {
     <Screen>
       <View style={styles.container}>
         <TopRectangle
-          children="Online Mentors"
-          children2="Do a call now"
+          children="Online Mentörler"
+          children2="Şimdi Görüşme Yap"
           back={false}
           style1={styles.style1}
         />
@@ -61,12 +61,12 @@ const OnlineScreen = connect(mapStateToProps, {
             <>
               <AppButton
                 left={7}
-                title="Reset Filters"
+                title="Filtreyi Temizle"
                 titleColor="black"
                 onPress={() => handleResetFilter()}
               />
               <AppTextInput
-                placeholder="Enter uni"
+                placeholder="Üniversite"
                 onChangeText={(text) =>
                   setData(
                     onlineMentors.filter((item) => {
@@ -79,7 +79,7 @@ const OnlineScreen = connect(mapStateToProps, {
                 }
               />
               <AppTextInput
-                placeholder="Enter major"
+                placeholder="Bölüm"
                 onChangeText={(text) =>
                   setData(
                     onlineMentors.filter((item) => {

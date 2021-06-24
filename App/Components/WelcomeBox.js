@@ -7,15 +7,15 @@ import { AntDesign } from "@expo/vector-icons";
 function WelcomeBox({ user, onPress }) {
   return (
     <View style={styles.container}>
-      <AppText style={styles.title}> Welcome!</AppText>
+      <AppText style={styles.title}> Hoşgeldin!</AppText>
       <AppText style={styles.subtitle}>
-        Answer the questions and have personal recommendations!
+        Sana özel mentör önerileri için soruları cevapla!
       </AppText>
       <TouchableWithoutFeedback onPress={onPress}>
         <View
           style={{ flexDirection: "row", margin: 5, alignItems: "baseline" }}
         >
-          <AppText style={styles.start}>Get Started</AppText>
+          <AppText style={styles.start}>Hadi Başla</AppText>
           <AntDesign name="caretright" color="#48B13E" size={18} />
         </View>
       </TouchableWithoutFeedback>

@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SettingsScreen from "../Screens/SettingsScreen";
 import MentorFormScreen from "../Screens/MentorFormScreen";
 import Account from "../Screens/Account";
+import MessagesScreen from "../Screens/MessagesScreen";
 
 import Help from "../Screens/Help";
 import PaymentDetails from "../Screens/PaymentDetails";
@@ -31,6 +32,11 @@ export const SettingsStack = () => {
         options={{ headerShown: false }}
         name="Account"
         component={Account}
+      />
+      <Screen
+        options={{ headerShown: false }}
+        name="MessagesScreen"
+        component={MessagesScreen}
       />
       <Screen options={{ headerShown: false }} name="Help" component={Help} />
     </Navigator>

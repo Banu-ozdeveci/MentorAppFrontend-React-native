@@ -4,37 +4,28 @@ import AppText from "../Components/AppText";
 import Screen from "../Components/Screen";
 import TopRectangle from "../Components/TopRectangle";
 import { connect } from "react-redux";
-import { getCurrentUserData, selectUserData } from "../Store/user";
+import { selectAuthUser } from "../Store/auth";
+import SettingItem from "../Components/SettingItem";
 
 import colors from "../style/colors";
 
 const mapStateToProps = (state) => ({
-  user: selectUserData(state),
+  user: selectAuthUser(state),
 });
 
-export const Account = connect(mapStateToProps, {
-  getCurrentUserData,
-})(({ getCurrentUserData, navigation, user }) => {
-  const handleGetCurrentUserData = async () => {
-    try {
-      await getCurrentUserData();
-    } catch (error) {
-      console.log("getCurrentUser", error);
-    }
-  };
+export const Account = connect(
+  mapStateToProps,
+  {}
+)(({ navigation, user }) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [isEnabled1, setIsEnabled1] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const toggleSwitch1 = () => setIsEnabled1((previousState) => !previousState);
 
-  useEffect(() => {
-    handleGetCurrentUserData();
-  }, []);
-
   return (
     <Screen>
       <TopRectangle
-        children="Account"
+        children="Hesabım"
         style1={styles.style1}
         onPress={() => navigation.navigate("SettingsScreen")}
       />
@@ -42,7 +33,7 @@ export const Account = connect(mapStateToProps, {
         <View style={{ flexDirection: "row", marginBottom: 6 }}>
           <AppText style={styles.text1}>UserName:</AppText>
           <AppText style={{ color: "black", left: 10 }}>
-            {user.username}
+            {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
           </AppText>
         </View>
 
@@ -51,9 +42,26 @@ export const Account = connect(mapStateToProps, {
           <AppText style={{ color: "black", left: 10 }}>{user.email}</AppText>
         </View>
       </View>
+      <View style={styles.items}>
+        <SettingItem
+          icon="comments"
+          title="Mesajlarım"
+          onPress={() => navigation.navigate("MessagesScreen")}
+        />
+        <SettingItem
+          icon="heart"
+          title="Favori Mentörlerim"
+          onPress={() => navigation.navigate("MessagesScreen")}
+        />
+        <SettingItem
+          icon="list"
+          title="Görüşme Geçmişim"
+          onPress={() => navigation.navigate("MessagesScreen")}
+        />
+      </View>
       <View style={styles.notificationContainer}>
         <View style={styles.container}>
-          <AppText style={styles.preferences}>Notifications</AppText>
+          <AppText style={styles.preferences}>Bildirimler</AppText>
         </View>
         <View style={styles.row1}>
           <View style={{ position: "absolute", top: 30, flexDirection: "row" }}>
@@ -93,8 +101,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.TITLE,
   },
+  items: {
+    marginVertical: 30,
+
+    width: "98%",
+    alignSelf: "center",
+  },
   notificationContainer: {
-    top: 100,
+    top: 10,
   },
   preferences: {
     color: colors.TITLE,

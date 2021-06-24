@@ -5,18 +5,19 @@ import MentorCard from "../Components/MentorCard";
 import TopRectangle from "../Components/TopRectangle";
 import Filter from "../Components/Filter";
 import colors from "../style/colors";
-import { selectAllMentorData } from "../Store/mentors";
+import { selectAllMentorData, selectRankingData } from "../Store/mentors";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state) => ({
   allData: selectAllMentorData(state),
+  ranking: selectRankingData(state),
 });
 
 export const SelectedRanking = connect(
   mapStateToProps,
   {}
-)(({ route, navigation, allData }) => {
-  let { rank, min, max } = route.params;
+)(({ route, navigation, allData, ranking }) => {
+  let { min, max } = route.params;
 
   return (
     <Screen>
@@ -29,7 +30,7 @@ export const SelectedRanking = connect(
         <Filter />
         <FlatList
           numColumns={2}
-          data={rank}
+          data={ranking}
           renderItem={({ item }) => (
             <MentorCard
               name={item.name}

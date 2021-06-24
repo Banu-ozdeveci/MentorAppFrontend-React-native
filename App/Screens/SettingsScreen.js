@@ -5,55 +5,44 @@ import SettingItem from "../Components/SettingItem";
 import Screen from "../Components/Screen";
 import ProfileBox from "../Components/ProfileBox";
 import colors from "../style/colors";
-import { logOut } from "../Store/auth";
+import { logOut, selectAuthUser } from "../Store/auth";
 import { connect } from "react-redux";
-import { getCurrentUserData, selectUserData } from "../Store/user";
 
 const mapStateToProps = (state) => ({
-  user: selectUserData(state),
+  user: selectAuthUser(state),
 });
 
 export const SettingsScreen = connect(mapStateToProps, {
-  getCurrentUserData,
   logOut,
-})(({ getCurrentUserData, navigation, user, logOut }) => {
-  const handleGetCurrentUserData = async () => {
-    try {
-      await getCurrentUserData();
-    } catch (error) {
-      console.log("getCurrentUser", error);
-    }
-  };
-
-  useEffect(() => {
-    handleGetCurrentUserData();
-  }, []);
-
+})(({ navigation, user, logOut }) => {
   return (
     <Screen>
-      <TopRectangle height={75} children="Settings" style1={styles.title} />
+      <TopRectangle height={75} children="Ayarlar" style1={styles.title} />
 
       <View style={styles.container}>
-        <ProfileBox name={user.username} style={styles.profileBox} />
+        <ProfileBox
+          name={user.name.charAt(0).toUpperCase() + user.name.slice(1)}
+          style={styles.profileBox}
+        />
         <SettingItem
           icon="user"
-          title="Account"
+          title="Hesabım"
           onPress={() => navigation.navigate("Account")}
         />
         <SettingItem
           icon="credit-card"
-          title="Payment Details"
+          title="Ödeme Geçmişi"
           onPress={() => navigation.navigate("PaymentDetails")}
         />
         <SettingItem
-          icon="questtion"
-          title="Want to be a mentor"
+          icon="question"
+          title="Mentör olmak ister misin?"
           onPress={() => navigation.navigate("MentorFormScreen")}
         />
 
         <SettingItem
           icon="info"
-          title="Help"
+          title="Yardım"
           onPress={() => navigation.navigate("Help")}
         />
         <SettingItem icon="sign-out" title="Logout" onPress={() => logOut()} />

@@ -8,12 +8,12 @@ import { composeWithDevTools } from "redux-devtools-extension";
 
 import { authReducer } from "./auth";
 import { mentorsReducer } from "./mentors";
-import { usersReducer } from "./user";
+//import { usersReducer } from "./user";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   mentors: mentorsReducer,
-  user: usersReducer,
+  // user: usersReducer,
 });
 
 const persistConfig = {

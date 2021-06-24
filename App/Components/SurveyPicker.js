@@ -33,7 +33,7 @@ function SurveyPicker({ title, data, onSelectItem, selectedItem }) {
       <Modal visible={modalVisible} animationType="slide">
         <Screen>
           <AppButton
-            title="Close"
+            title="Kapat"
             onPress={() => setModalVisible(false)}
             width={"90%"}
             titleColor={"white"}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Screen from "../Components/Screen";
 import {
   Text,
   StyleSheet,
@@ -13,57 +12,84 @@ import {
 
 import {
   getUniMajor,
-  selectUniMajorData,
   getFavMentors,
   selectFavMentorsData,
   selectRecommendedMentorsData,
+  getRecommendedMentors,
+  getOnlineMentors,
 } from "../Store/mentors";
-import { connect } from "react-redux";
+
+import Screen from "../Components/Screen";
 import RecommandationCard from "../Components/RecommandationCard";
 import WelcomeBox from "../Components/WelcomeBox";
 import HomeSubtitle from "../Components/HomeSubtitle";
 import MentorCard from "../Components/MentorCard";
 import AppText from "../Components/AppText";
 import colors from "../style/colors";
+import { getRecommendedData } from "../API";
+import { connect } from "react-redux";
+import { selectAuthUser, selectAuthToken } from "../Store/auth";
 
 const mapStateToProps = (state) => ({
-  uniMajor: selectUniMajorData(state),
   favMentors: selectFavMentorsData(state),
+  user: selectAuthUser(state),
+  token: selectAuthToken(state),
   recommended: selectRecommendedMentorsData(state),
 });
 
 const HomeScreen = connect(mapStateToProps, {
   getUniMajor,
+  getOnlineMentors,
   getFavMentors,
+  getRecommendedMentors,
 })(
   ({
     navigation,
-    uniMajor,
+    user,
     getUniMajor,
+    getRecommendedMentors,
     getFavMentors,
     favMentors,
+    getOnlineMentors,
     recommended,
+    token,
   }) => {
     const [search, setSearch] = useState("");
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
-    const [click, setClicked] = useState(false);
 
     LogBox.ignoreLogs(["Setting a timer"]);
     LogBox.ignoreLogs(["Encountered"]);
     LogBox.ignoreLogs(["Each"]);
-    LogBox.ignoreLogs(["YellowBox has been"]);
+
     const handleFavMentorsData = async () => {
       try {
         await getFavMentors();
       } catch (error) {
-        console.log("App get fav mentor error", error);
+        console.log("Get fav mentor error", error);
+      }
+    };
+    const handleOnlineData = async () => {
+      try {
+        await getOnlineMentors();
+      } catch (error) {
+        console.log("App get Online error", error);
+      }
+    };
+
+    const handleRecommendedData = async (data) => {
+      try {
+        await getRecommendedMentors(data);
+      } catch (error) {
+        console.log("Get recommended mentor error", error);
       }
     };
 
     useEffect(() => {
       setMasterDataSource(data);
       handleFavMentorsData();
+      handleRecommendedData(user._id);
+      handleOnlineData();
     }, []);
 
     const searchFilterFunction = (text) => {
@@ -86,9 +112,6 @@ const HomeScreen = connect(mapStateToProps, {
     const ItemView = ({ item }) => {
       return (
         <Text style={styles.itemStyle} onPress={() => handleCategory(item)}>
-          {item.id}
-
-          {"."}
           {item.title.toUpperCase()}
         </Text>
       );
@@ -125,7 +148,7 @@ const HomeScreen = connect(mapStateToProps, {
             onChangeText={(text) => searchFilterFunction(text)}
             value={search}
             underlineColorAndroid="transparent"
-            placeholder="Search University Or Major"
+            placeholder="Ara"
           />
           <FlatList
             data={filteredDataSource}
@@ -137,14 +160,13 @@ const HomeScreen = connect(mapStateToProps, {
         <View style={styles.contain}>
           <ScrollView contentContainerStyle={{ alignItems: "center" }}>
             <WelcomeBox
-              user="Banu"
               onPress={() => {
-                navigation.navigate("SurveyScreen"), setClicked(true);
+                navigation.navigate("SurveyScreen");
               }}
             />
             <HomeSubtitle
-              title="This week's favorites"
-              style1={{ right: 10 }}
+              title="Bu Haftanın Favorileri"
+              style1={{ right: 20 }}
               onPress={() => navigation.navigate("WeekFavorites")}
             />
 
@@ -165,14 +187,15 @@ const HomeScreen = connect(mapStateToProps, {
               )}
               keyExtractor={(item) => item.id}
             />
-            <View style={{ marginVertical: 10 }}>
+            <View style={{ marginVertical: 10, left: -20 }}>
               <HomeSubtitle
-                title="Recommended For you"
+                style2={{ left: 30 }}
+                title="Senin için Öneriler"
                 onPress={() => navigation.navigate("Recommendations")}
               />
             </View>
-            {click === true ? (
-              recommended.map((item, index) => (
+            {recommended.length !== 0 ? (
+              recommended.map((item) => (
                 <RecommandationCard
                   name={item.name}
                   uni={item.uni}
@@ -243,38 +266,70 @@ export default HomeScreen;
 const data = [
   {
     id: 1,
-    title: "Galatasaray University",
+    title: "Galatasaray Üniversitesi",
     domain: "uni",
     nav: "Galatasaray",
   },
   {
     id: 2,
-    title: "Boğaziçi University",
+    title: "Boğaziçi Üniversitesi",
     domain: "uni",
     nav: "Boğaziçi",
   },
   {
     id: 3,
-    title: "Istanbul Technical University",
+    title: "İstanbul Teknik Üniversitesi",
     domain: "uni",
     nav: "İtü",
   },
   {
     id: 4,
-    title: "Middle east technical university",
+    title: "Orta Doğu Teknik Üniversitesi",
     domain: "uni",
     nav: "Odtü",
   },
-  {
-    id: 5,
-    title: "Computer Science",
-    domain: "major",
-    nav: "CS",
-  },
+
   {
     id: 6,
-    title: "Economy",
+    title: "Koç Üniversitesi",
+    domain: "uni",
+    nav: "Koç",
+  },
+  {
+    id: 7,
+    title: "Hacettepe Üniversitesi",
+    domain: "uni",
+    nav: "Hacettepe Üniversitesi",
+  },
+
+  {
+    id: 15,
+    title: "Bilgisayar Mühendisliği",
     domain: "major",
-    nav: "Economy",
+    nav: "Bilgisayar M.",
+  },
+  {
+    id: 16,
+    title: "Ekonomi",
+    domain: "major",
+    nav: "Ekonomi",
+  },
+  {
+    id: 17,
+    title: "Tıp",
+    domain: "major",
+    nav: "Tıp",
+  },
+  {
+    id: 17,
+    title: "Hukuk",
+    domain: "major",
+    nav: "Hukuk",
+  },
+  {
+    id: 18,
+    title: "Matematik",
+    domain: "major",
+    nav: "Matematik",
   },
 ];

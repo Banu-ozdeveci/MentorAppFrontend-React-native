@@ -31,13 +31,14 @@ function RecommandationCard({ name, uni, major, year, url, onPress }) {
             style={styles.anonim}
           />
         )}
+
         <View style={styles.row}>
           <View style={styles.column}>
             <AppText style={styles.name}>{name}</AppText>
             <AppText style={styles.uni}>
               {uni} , {major}
             </AppText>
-            <AppText style={styles.year}>{year} Year</AppText>
+            <AppText style={styles.year}>{year}</AppText>
           </View>
         </View>
         <FontAwesome
@@ -52,13 +53,22 @@ function RecommandationCard({ name, uni, major, year, url, onPress }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flexDirection: "row", margin: 10, alignItems: "center" },
+  container: {
+    flexDirection: "row",
+
+    margin: 10,
+    alignItems: "center",
+
+    width: 350,
+  },
   anonim: {
     width: 50,
     height: 50,
     borderRadius: 35,
     marginBottom: 4,
-    right: 72,
+
+    justifyContent: "flex-start",
+    left: 10,
     top: 2,
   },
   image: {
@@ -66,11 +76,13 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 35,
     marginBottom: 4,
-    right: 72,
+    justifyContent: "flex-start",
+    left: 10,
+    top: 2,
   },
   row: {
     flexDirection: "row",
-    right: 46,
+    marginHorizontal: 30,
   },
   name: {
     fontWeight: "bold",
@@ -80,7 +92,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   icon: {
-    left: 60,
+    position: "absolute",
+    right: 27,
   },
   year: {
     fontSize: 13,

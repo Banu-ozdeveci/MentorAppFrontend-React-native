@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Image,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
 import Screen from "../Components/Screen";
 import { FontAwesome } from "@expo/vector-icons";
@@ -17,9 +18,7 @@ import Line from "../Components/Line";
 import Icon from "../Components/Icon";
 import { connect } from "react-redux";
 
-import { signIn, selectAuthStatus } from "../Store/auth";
-import { color } from "react-native-reanimated";
-import useColorScheme from "react-native/Libraries/Utilities/useColorScheme";
+import { signIn, selectAuthError } from "../Store/auth";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -27,12 +26,12 @@ const validationSchema = Yup.object().shape({
 });
 
 const mapStateToProps = (state) => ({
-  authStatus: selectAuthStatus(state),
+  authError: selectAuthError(state),
 });
 
 const Login = connect(mapStateToProps, {
   signIn,
-})(({ signIn, navigation }) => {
+})(({ signIn, navigation, authError }) => {
   return (
     <Screen>
       <TouchableWithoutFeedback
@@ -51,6 +50,9 @@ const Login = connect(mapStateToProps, {
           source={require("../../assets/login.jpg")}
         />
         <AppText style={styles.login}>Login</AppText>
+        {authError !== null ? (
+          <AppText style={styles.authError}>{authError}</AppText>
+        ) : null}
         <Formik
           initialValues={{ email: "", password: "" }}
           onSubmit={(values) => signIn(values)}
@@ -69,6 +71,7 @@ const Login = connect(mapStateToProps, {
                 keyboardType="email-address"
                 onChangeText={handleChange("email")}
                 onBlur={() => setFieldTouched("email")}
+                height={57}
               />
               {touched.email && (
                 <AppText
@@ -85,14 +88,19 @@ const Login = connect(mapStateToProps, {
                 placeholder="Password:"
                 onChangeText={handleChange("password")}
                 secureTextEntry
+                height={57}
               />
               {touched.password && (
                 <AppText style={{ color: "#BD0505", fontWeight: "400" }}>
                   {errors.password}
                 </AppText>
               )}
-
-              <AppText style={styles.forget}>Forget Password?</AppText>
+              <TouchableOpacity
+                style={styles.forget}
+                onPress={() => navigation.navigate("ForgotPassword")}
+              >
+                <AppText style={styles.forget}>Forgot Password?</AppText>
+              </TouchableOpacity>
 
               <AppButton
                 title="Login"
@@ -104,7 +112,14 @@ const Login = connect(mapStateToProps, {
             </>
           )}
         </Formik>
-        <View style={{ flexDirection: "row", marginVertical: 10, top: 15 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            marginVertical: 15,
+            top: 15,
+            marginBottom: 20,
+          }}
+        >
           <AppText style={styles.text1}>Don't Have an Account?</AppText>
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate("SignUp")}
@@ -113,10 +128,10 @@ const Login = connect(mapStateToProps, {
           </TouchableWithoutFeedback>
         </View>
 
-        <View style={{ flexDirection: "row", marginVertical: 40 }}>
+        <View style={{ flexDirection: "row", marginVertical: 20 }}>
           <Line width="15%" color={colors.DARKGREEN} />
-          <AppText style={{ marginHorizontal: 20, margin: 10 }}>
-            Or login with
+          <AppText style={{ marginHorizontal: 20, marginTop: 10 }}>
+            or Login with
           </AppText>
           <Line width="15%" color={colors.DARKGREEN} />
         </View>
@@ -125,7 +140,7 @@ const Login = connect(mapStateToProps, {
           style={{
             flexDirection: "row",
             marginVertical: 2,
-            bottom: 20,
+            top: -5,
           }}
         >
           <View style={{ right: 20 }}>
@@ -153,25 +168,28 @@ export default Login;
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: "center" },
   image: {
-    width: "80%",
-    height: "25%",
+    width: "58%",
+    height: "23%",
     marginBottom: 16,
   },
-
+  authError: {
+    color: "red",
+    alignSelf: "center",
+  },
   icon: { left: 20, top: 18 },
   login: {
     alignSelf: "flex-start",
     fontSize: 31,
-    left: 55,
+    left: 58,
     color: colors.TITLE,
     fontWeight: "bold",
-    marginBottom: 7,
+    marginBottom: 2,
   },
   forget: {
     alignSelf: "flex-end",
     right: 30,
     margin: 5,
-    color: colors.SOFTBLACK,
+    color: colors.TITLE,
     fontSize: 14,
   },
   text1: {

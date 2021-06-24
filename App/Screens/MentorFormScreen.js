@@ -19,9 +19,9 @@ function MentorFormScreen({ navigation }) {
         onPress={() => navigation.navigate("SettingsScreen")}
       />
       <View style={styles.container}>
-        <View style={styles.whiteBox}>
+        {/* <View style={styles.whiteBox}>
           <AppText style={styles.addInfo}>Add your informations</AppText>
-        </View>
+        </View> */}
         <KeyboardAvoidingView
           behavior="position"
           style={styles.container}
