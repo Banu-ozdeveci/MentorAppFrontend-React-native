@@ -33,6 +33,8 @@ $ cd ../projectName
 $ npm start
 ```
 
+## Demo
+https://github.com/Banu-ozdeveci/MentorAppFrontend-React-native/issues/1#issue-1174309150
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
